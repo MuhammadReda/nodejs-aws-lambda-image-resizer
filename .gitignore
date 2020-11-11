@@ -1,5 +1,5 @@
-/node_modules
-package-lock.json
+/app/node_modules
+/app/package-lock.json
 *.zip
 /.idea/
 *.DS_Store
