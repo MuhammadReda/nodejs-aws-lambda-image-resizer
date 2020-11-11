@@ -38,7 +38,7 @@ exports.handler = async (event) => {
         return {
             statusCode: 400,
             body: `Unknown func parameter "${action}"\n` +
-                  'For query ".../150x150_func", "_func" must be either empty, "_min" or "_max"',
+                'For query ".../150x150_func", "_func" must be either empty, "_min" or "_max"',
             headers: {"Content-Type": "text/plain"}
         };
     }
@@ -77,7 +77,7 @@ exports.handler = async (event) => {
 
         return {
             statusCode: 301,
-            headers: {"Location" : `${URL}/${path}`}
+            headers: {"Location": `${URL}/${path}`}
         };
     } catch (e) {
         return {
