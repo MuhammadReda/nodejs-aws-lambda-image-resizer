@@ -1,0 +1,24 @@
+{
+    "name": "aws-lambda-image-processor",
+    "version": "4.0.1",
+    "description": "Resize images on the fly using AWS Lambda.",
+    "main": "index.js",
+    "author": {
+        "name": "Muhammad Reda",
+        "email": "say.hello@mreda.net"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MuhammadReda/aws-lambda-image-processor.git"
+    },
+    "homepage": "https://github.com/MuhammadReda/aws-lambda-image-processor#readme",
+    "bugs": {
+        "url": "https://github.com/MuhammadReda/aws-lambda-image-processor/issues"
+    },
+    "dependencies": {
+        "sharp": "^0.23.3"
+    },
+    "devDependencies": {
+        "aws-sdk": "^2.36.0"
+    }
+}
