@@ -1,4 +1,4 @@
-FROM amazonlinux
+FROM amazonlinux:2.0.20200722.0
 
 # install dependencies
 RUN yum -y install make gcc*
