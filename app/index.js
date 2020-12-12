@@ -2,8 +2,9 @@
 
 
 const AWS = require('aws-sdk');
-const S3 = new AWS.S3({signatureVersion: 'v4'});
 const Sharp = require('sharp');
+
+const S3 = new AWS.S3({ signatureVersion: 'v4' });
 const PathPattern = /(.*\/)?(.*)\/(.*)/;
 
 // parameters
@@ -29,7 +30,7 @@ exports.handler = async (event) => {
         return {
             statusCode: 400,
             body: `WHITELIST is set but does not contain the size parameter "${resizeOption}"`,
-            headers: {"Content-Type": "text/plain"}
+            headers: {'Content-Type': 'text/plain'}
         };
     }
 
@@ -39,7 +40,7 @@ exports.handler = async (event) => {
             statusCode: 400,
             body: `Unknown func parameter "${action}"\n` +
                 'For query ".../150x150_func", "_func" must be either empty, "_min" or "_max"',
-            headers: {"Content-Type": "text/plain"}
+            headers: { 'Content-Type': 'text/plain' }
         };
     }
 
@@ -62,8 +63,8 @@ exports.handler = async (event) => {
                 fit = 'cover';
                 break;
         }
-        const result = await Sharp(data.Body, {failOnError: false})
-            .resize(width, height, {withoutEnlargement: true, fit})
+        const result = await Sharp(data.Body, { failOnError: false })
+            .resize(width, height, { withoutEnlargement: true, fit })
             .rotate()
             .toBuffer();
 
@@ -77,13 +78,13 @@ exports.handler = async (event) => {
 
         return {
             statusCode: 301,
-            headers: {"Location": `${URL}/${path}`}
+            headers: {'Location': `${URL}/${path}`}
         };
     } catch (e) {
         return {
             statusCode: e.statusCode || 400,
             body: 'Exception: ' + e.message,
-            headers: {"Content-Type": "text/plain"}
+            headers: {'Content-Type': 'text/plain'}
         };
     }
 }
