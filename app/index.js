@@ -1,18 +1,24 @@
 'use strict'
 
-
 const AWS = require('aws-sdk');
 const Sharp = require('sharp');
 
 const S3 = new AWS.S3({ signatureVersion: 'v4' });
 const PathPattern = /(.*\/)?(.*)\/(.*)/;
 
-// parameters
+// environment variables
 const {BUCKET, URL} = process.env;
 const WHITELIST = process.env.WHITELIST
     ? Object.freeze(process.env.WHITELIST.split(' '))
     : null;
 
+const fitOptions = [
+    'cover',    // Preserving aspect ratio, ensure the image covers both provided dimensions by cropping/clipping to fit. (default)
+    'contain',  // Preserving aspect ratio, contain within both provided dimensions using "letterboxing" where necessary.
+    'fill',     // Ignore the aspect ratio of the input and stretch to both provided dimensions.
+    'inside',   // Preserving aspect ratio, resize the image to be as large as possible while ensuring its dimensions are less than or equal to both those specified.
+    'outside',  // Preserving aspect ratio, resize the image to be as small as possible while ensuring its dimensions are greater than or equal to both those specified.
+];
 
 exports.handler = async (event) => {
     const path = event.queryStringParameters.path;
@@ -30,39 +36,31 @@ exports.handler = async (event) => {
         return {
             statusCode: 400,
             body: `WHITELIST is set but does not contain the size parameter "${resizeOption}"`,
-            headers: {'Content-Type': 'text/plain'}
+            headers: { 'Content-Type': 'text/plain' }
         };
     }
 
-    // Action validation.
-    if (action && action !== 'max' && action !== 'min') {
+    // Fit validation
+    if(action && (fitOptions.indexOf(action) === -1)) {
         return {
             statusCode: 400,
-            body: `Unknown func parameter "${action}"\n` +
-                'For query ".../150x150_func", "_func" must be either empty, "_min" or "_max"',
+            body: `Unknown Fit action parameter "${action}"\n` +
+                `Available Fit action: ${fitOptions.join(', ')}.`,
             headers: { 'Content-Type': 'text/plain' }
         };
     }
 
     try {
-        const data = await S3
-            .getObject({Bucket: BUCKET, Key: dir + filename})
+        const data = await S3.getObject({
+                Bucket: BUCKET,
+                Key: dir + filename
+            })
             .promise();
 
         const width = sizes[0] === 'AUTO' ? null : parseInt(sizes[0]);
         const height = sizes[1] === 'AUTO' ? null : parseInt(sizes[1]);
-        let fit;
-        switch (action) {
-            case 'max':
-                fit = 'inside';
-                break;
-            case 'min':
-                fit = 'outside';
-                break;
-            default:
-                fit = 'cover';
-                break;
-        }
+        const fit = action || 'cover';
+
         const result = await Sharp(data.Body, { failOnError: false })
             .resize(width, height, { withoutEnlargement: true, fit })
             .rotate()
@@ -80,7 +78,8 @@ exports.handler = async (event) => {
             statusCode: 301,
             headers: {'Location': `${URL}/${path}`}
         };
-    } catch (e) {
+    }
+    catch(e) {
         return {
             statusCode: e.statusCode || 400,
             body: 'Exception: ' + e.message,
