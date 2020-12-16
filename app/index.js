@@ -21,15 +21,19 @@ const fitOptions = [
 ];
 
 exports.handler = async (event) => {
-    const path = event.queryStringParameters.path;
-    const parts = PathPattern.exec(path);
-    const dir = parts[1] || '';
-    const resizeOption = parts[2];  // e.g. "150x150_max"
+    const path = event.queryStringParameters.path; // should be something like "200x150_fill/folder/image.png"
+    let parts = path.split('/');
+    const resizeOption = parts.shift();
     const sizeAndAction = resizeOption.split('_');
-    const filename = parts[3];
-
+    const filename = parts.join('/');
     const sizes = sizeAndAction[0].split("x");
-    const action = sizeAndAction.length > 1 ? sizeAndAction[1] : null;
+    const action = sizeAndAction.length > 1 ? sizeAndAction[1] : 'cover';
+
+
+    console.log(event, 'event');
+    console.log(path, 'path');
+
+
 
     // Whitelist validation.
     if (WHITELIST && !WHITELIST.includes(resizeOption)) {
@@ -53,12 +57,12 @@ exports.handler = async (event) => {
     try {
         const data = await S3.getObject({
                 Bucket: BUCKET,
-                Key: dir + filename
+                Key: filename
             })
             .promise();
 
-        const width = sizes[0] === 'AUTO' ? null : parseInt(sizes[0]);
-        const height = sizes[1] === 'AUTO' ? null : parseInt(sizes[1]);
+        const width = sizes[0] === 'auto' ? null : parseInt(sizes[0]);
+        const height = sizes[1] === 'auto' ? null : parseInt(sizes[1]);
         const fit = action || 'cover';
 
         const result = await Sharp(data.Body, { failOnError: false })
