@@ -4,7 +4,6 @@ const AWS = require('aws-sdk');
 const Sharp = require('sharp');
 
 const S3 = new AWS.S3({ signatureVersion: 'v4' });
-const PathPattern = /(.*\/)?(.*)\/(.*)/;
 
 // environment variables
 const {BUCKET, URL} = process.env;
