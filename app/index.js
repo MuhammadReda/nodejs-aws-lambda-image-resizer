@@ -78,8 +78,10 @@ exports.handler = async (event) => {
         }).promise();
 
         return {
-            statusCode: 301,
-            headers: { 'Location': `${URL}/${path}` }
+            statusCode: 200,
+            body: result.toString('base64'),
+            isBase64Encoded: true,
+            headers: { 'Content-Type': data.contentType }
         };
     }
     catch(e) {
