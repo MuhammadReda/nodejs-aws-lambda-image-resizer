@@ -76,14 +76,18 @@ exports.handler = async (event) => {
 
         return {
             statusCode: 301,
-            headers: {'Location': `${URL}/${path}`}
+            headers: { 'Location': `${URL}/${path}` }
         };
     }
     catch(e) {
         return {
             statusCode: e.statusCode || 400,
-            body: 'Exception: ' + e.message,
-            headers: {'Content-Type': 'text/plain'}
+            headers: { 'Content-Type': 'application/json' },
+            body: {
+                errorMessage: e.message,
+                errorCode: e.statusCode || 0,
+                error: e
+            }
         };
     }
 }
