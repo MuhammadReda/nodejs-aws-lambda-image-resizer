@@ -25,14 +25,17 @@ exports.handler = async (event) => {
     const resizeOption = parts.shift();
     const sizeAndAction = resizeOption.split('_');
     const filename = parts.join('/');
-    const sizes = sizeAndAction[0].split("x");
+    const sizes = sizeAndAction[0].split('x');
     const action = sizeAndAction.length > 1 ? sizeAndAction[1] : 'cover';
 
-
-    console.log(event, 'event');
-    console.log(path, 'path');
-
-
+    // validate requested filename extension.
+    if(!/\.(jpe?g|png|gif|svg|bmp)$/i.test(filename)) {
+        return {
+            statusCode: 400,
+            body: `Requested file must be an image. Invalid filename: ${filename}.`,
+            headers: { 'Content-Type': 'text/plain' }
+        };
+    }
 
     // Whitelist validation.
     if (WHITELIST && !WHITELIST.includes(resizeOption)) {
@@ -48,7 +51,7 @@ exports.handler = async (event) => {
         return {
             statusCode: 400,
             body: `Unknown Fit action parameter "${action}"\n` +
-                `Available Fit action: ${fitOptions.join(', ')}.`,
+                `Available Fit actions: ${fitOptions.join(', ')}.`,
             headers: { 'Content-Type': 'text/plain' }
         };
     }
@@ -77,17 +80,23 @@ exports.handler = async (event) => {
             CacheControl: 'public, max-age=86400'
         }).promise();
 
+
         return {
             statusCode: 200,
             body: result.toString('base64'),
             isBase64Encoded: true,
-            headers: { 'Content-Type': data.contentType }
+            headers: {
+                'Content-Type': data.contentType,
+                'Cache-Control': 'public, max-age=86400'
+            }
         };
     }
     catch(e) {
         return {
             statusCode: e.statusCode || 400,
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: {
                 errorMessage: e.message,
                 errorCode: e.statusCode || 0,
