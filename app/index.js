@@ -12,7 +12,7 @@ const WHITELIST = process.env.WHITELIST
     : null;
 
 const DEFAULT_CACHE_HEADER = 'public, max-age=86400';
-const fitOptions = [
+const FIT_OPTIONS = [
     'cover',    // Preserving aspect ratio, ensure the image covers both provided dimensions by cropping/clipping to fit. (default)
     'contain',  // Preserving aspect ratio, contain within both provided dimensions using "letterboxing" where necessary.
     'fill',     // Ignore the aspect ratio of the input and stretch to both provided dimensions.
@@ -67,11 +67,11 @@ exports.handler = async (event) => {
     }
 
     // Fit validation
-    if(action && (fitOptions.indexOf(action) === -1)) {
+    if(action && (FIT_OPTIONS.indexOf(action) === -1)) {
         return {
             statusCode: 400,
             body: `Unknown Fit action parameter "${action}"\n` +
-                `Available Fit actions: ${fitOptions.join(', ')}.`,
+                `Available Fit actions: ${FIT_OPTIONS.join(', ')}.`,
             headers: { 'Content-Type': 'text/plain' }
         };
     }
@@ -114,7 +114,7 @@ exports.handler = async (event) => {
             Bucket: BUCKET,
             ContentType: data.ContentType,
             Key: path,
-            CacheControl: 'public, max-age=86400'
+            CacheControl: DEFAULT_CACHE_HEADER
         }).promise();
 
 
@@ -124,7 +124,7 @@ exports.handler = async (event) => {
             isBase64Encoded: true,
             headers: {
                 'Content-Type': data.contentType,
-                'Cache-Control': 'public, max-age=86400'
+                'Cache-Control': DEFAULT_CACHE_HEADER
             }
         };
     }
