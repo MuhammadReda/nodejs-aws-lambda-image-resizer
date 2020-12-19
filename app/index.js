@@ -76,7 +76,6 @@ exports.handler = async (event) => {
         };
     }
 
-
     // check if a resized option exists.
     let existingResized = await getResource(path);
     if(existingResized) {
@@ -108,52 +107,35 @@ exports.handler = async (event) => {
         };
     }
 
-    try {
-        const data = await S3.getObject({
-                Bucket: BUCKET,
-                Key: filename
-            })
-            .promise();
+    const width = sizes[0] === 'auto' ? null : parseInt(sizes[0]);
+    const height = sizes[1] === 'auto' ? null : parseInt(sizes[1]);
+    const fit = action || 'cover';
 
-        const width = sizes[0] === 'auto' ? null : parseInt(sizes[0]);
-        const height = sizes[1] === 'auto' ? null : parseInt(sizes[1]);
-        const fit = action || 'cover';
+    // create a new image using provided dimensions.
+    const result = await Sharp(originalImage.Body, { failOnError: false })
+        .resize(width, height, { withoutEnlargement: true, fit })
+        .rotate()
+        .toBuffer();
 
-        const result = await Sharp(data.Body, { failOnError: false })
-            .resize(width, height, { withoutEnlargement: true, fit })
-            .rotate()
-            .toBuffer();
-
-        await S3.putObject({
-            Body: result,
-            Bucket: BUCKET,
-            ContentType: data.ContentType,
-            Key: path,
-            CacheControl: DEFAULT_CACHE_HEADER
-        }).promise();
+    // save newly created image to S3.
+    await S3.putObject({
+        Body: result,
+        Bucket: BUCKET,
+        ContentType: originalImage.ContentType,
+        Key: path,
+        CacheControl: DEFAULT_CACHE_HEADER
+    }).promise();
 
 
-        return {
-            statusCode: 200,
-            body: result.toString('base64'),
-            isBase64Encoded: true,
-            headers: {
-                'Content-Type': data.contentType,
-                'Cache-Control': DEFAULT_CACHE_HEADER
-            }
-        };
-    }
-    catch(e) {
-        return {
-            statusCode: e.statusCode || 400,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: {
-                errorMessage: e.message,
-                errorCode: e.statusCode || 0,
-                error: e
-            }
-        };
-    }
+    // return created image as a repsonse.
+    return {
+        statusCode: 200,
+        body: result.toString('base64'),
+        isBase64Encoded: true,
+        headers: {
+            'Content-Type': originalImage.contentType,
+            'Cache-Control': DEFAULT_CACHE_HEADER,
+            'Age': 0
+        }
+    };
 }
