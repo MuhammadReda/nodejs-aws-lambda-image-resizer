@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const AWS = require('aws-sdk');
 const Sharp = require('sharp');
@@ -6,11 +6,12 @@ const Sharp = require('sharp');
 const S3 = new AWS.S3({ signatureVersion: 'v4' });
 
 // environment variables
-const {BUCKET, URL} = process.env;
+const BUCKET = process.env.BUCKET;
 const WHITELIST = process.env.WHITELIST
     ? Object.freeze(process.env.WHITELIST.split(' '))
     : null;
 
+const DEFAULT_CACHE_HEADER = 'public, max-age=86400';
 const fitOptions = [
     'cover',    // Preserving aspect ratio, ensure the image covers both provided dimensions by cropping/clipping to fit. (default)
     'contain',  // Preserving aspect ratio, contain within both provided dimensions using "letterboxing" where necessary.
@@ -18,6 +19,25 @@ const fitOptions = [
     'inside',   // Preserving aspect ratio, resize the image to be as large as possible while ensuring its dimensions are less than or equal to both those specified.
     'outside',  // Preserving aspect ratio, resize the image to be as small as possible while ensuring its dimensions are greater than or equal to both those specified.
 ];
+
+function getResource(resourcePath) {
+
+    let params = {
+        Bucket: BUCKET,
+        Key: resourcePath
+    };
+
+    return new Promise((resolve, reject) => {
+        S3.getObject(params, (err, data) => {
+            if(err) {
+                return resolve(false);
+            }
+            if(data) {
+                return resolve(data);
+            }
+        })
+    });
+}
 
 exports.handler = async (event) => {
     const path = event.queryStringParameters.path; // should be something like "200x150_fill/folder/image.png"
