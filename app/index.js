@@ -76,6 +76,23 @@ exports.handler = async (event) => {
         };
     }
 
+
+    // check if a resized option exists.
+    let existingResized = await getResource(path);
+    if(existingResized) {
+        // if a resized option exists, return it.
+        return {
+            statusCode: 200,
+            body: (Buffer.from(existingResized.Body)).toString('base64'),
+            isBase64Encoded: true,
+            headers: {
+                'Content-Type': existingResized.contentType,
+                'Cache-Control': DEFAULT_CACHE_HEADER
+            }
+        };
+    }
+
+
     try {
         const data = await S3.getObject({
                 Bucket: BUCKET,
