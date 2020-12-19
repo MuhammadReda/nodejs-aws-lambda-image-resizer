@@ -92,6 +92,21 @@ exports.handler = async (event) => {
         };
     }
 
+    // load original image.
+    let originalImage = await getResource(filename);
+
+    // check if image does not exist.
+    if(!originalImage) {
+        // return 404.
+        return {
+            statusCode: 404,
+            body: `Resource not found. Could not find resource: ${filename}.`,
+            headers: {
+                'Content-Type': 'text/plain',
+                'Cache-Control': 'private, nocache'
+            }
+        };
+    }
 
     try {
         const data = await S3.getObject({
