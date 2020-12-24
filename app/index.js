@@ -40,7 +40,8 @@ function getResource(resourcePath) {
 }
 
 exports.handler = async (event) => {
-    const path = event.queryStringParameters.path; // should be something like "200x150_fill/folder/image.png"
+    const pathParameters = event.pathParameters;
+    const path = pathParameters.proxy || pathParameters[Object.keys(pathParameters)[0]];
     let parts = path.split('/');
     const resizeOption = parts.shift();
     const sizeAndAction = resizeOption.split('_');
