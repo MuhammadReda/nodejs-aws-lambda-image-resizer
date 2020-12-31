@@ -43,7 +43,7 @@ to resize S3 images using Node.js on the fly.
         "Statement": [
             {
                 "Effect": "Allow",
-                "Resource": "arn:aws:s3:::YOUR_S3_BUCKET_NAME/*"
+                "Resource": "arn:aws:s3:::YOUR_S3_BUCKET_NAME/*",
                 "Action": [
                     "s3:GetObject",
                     "s3:PutObject"
