@@ -11,7 +11,7 @@ to resize S3 images using Node.js on the fly.
 
 
 ### How Do Images Get Resized?
-1. User request an image from the API Gateway.
+1. User requests an image from the API Gateway.
 2. API Gateway triggers the Lambda Function.
 3. The function runs basic validations on user input.
 4. Then, the function checks if a resized image exists on S3 Bucket.
