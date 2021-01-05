@@ -125,8 +125,9 @@ to resize S3 images using Node.js on the fly.
         - `{api_gateway_url}`: The API Gateway URL. Example `https://dh12oluo25.execute-api.us-east-1.amazonaws.com/production`.
         - `{width}`: Image width in pixels or 'auto'.
         - `{height}`: Image height in pixels or 'auto'.
-        - `{fit}`: [Sharp.js image fit](https://sharp.pixelplumbing.com/api-resize). Defaults to 'cover'. 
-        
+        - `{fit}`: [Sharp.js image fit](https://sharp.pixelplumbing.com/api-resize). Defaults to 'cover'.
+        - `{s3_object_path}`: Path to image inside S3 Bucket. 
+
 
 ## Build Your Own AWS Lambda Image Reiszer
 Because requirements always differ and there's no one magic size fits all,
