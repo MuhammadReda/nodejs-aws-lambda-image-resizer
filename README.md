@@ -108,7 +108,27 @@ to resize S3 images using Node.js on the fly.
     - Click on `Deploy to stage`.
     - API URL should now appear under `Invoke URL`. Copy it as that's the URL to be used to resize images.
 
-### Build Your Own AWS Lambda Image Reiszer
+5. Finally, resize images using AWS Lambda!
+    - Resized image URL structure:
+    ```
+    {api_gatewau_url}/{width}x{height}/{s3_object_path}
+    # example: https://dh12oluo25.execute-api.us-east-1.amazonaws.com/production/180x120/image.png
+    # example: https://dh12oluo25.execute-api.us-east-1.amazonaws.com/production/640x480/path/to/image.jpeg
+    ```
+    OR
+    ```
+    {api_gatewau_url}/{width}x{height}_{fit}/{s3_object_path}
+    # example: https://dh12oluo25.execute-api.us-east-1.amazonaws.com/production/180x120_fill/image.png
+    # example: https://dh12oluo25.execute-api.us-east-1.amazonaws.com/production/640x480_inside/another/path/to/image.jpg
+    ```
+    - URL variables explained:
+        - `{api_gateway_url}`: The API Gateway URL. Example `https://dh12oluo25.execute-api.us-east-1.amazonaws.com/production`.
+        - `{width}`: Image width in pixels or 'auto'.
+        - `{height}`: Image height in pixels or 'auto'.
+        - `{fit}`: [Sharp.js image fit](https://sharp.pixelplumbing.com/api-resize). Defaults to 'cover'. 
+        
+
+## Build Your Own AWS Lambda Image Reiszer
 Because requirements always differ and there's no one magic size fits all,
 this simple resizer is designed so you can modify the original script to match your requirements
 and then rebuild it in order to be published to your own AWS Lambda Function.
