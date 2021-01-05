@@ -115,13 +115,11 @@ docker-compose build
 docker-compose up --build
 ```
 
-5. Note that after the build is completed the container sleeps for 10 minutes for you to copy the build.
+5. Note that after the build is complete the container sleeps for 10 minutes for you to copy the build.
 
-6. Now the build is ready to be copied from the container. Run `docker ps` to list containers running on your machine.
-
-7. Find the Container ID for our Image and run to copy the build from inside the container to your host
+6. Find the Container ID for our Image and run to copy the build from inside the container to your host
 ```bash
-docker cp {CONTAINER_ID}:/build/build.zip path/to/be/copied/to
+docker cp aws-lambda-image-resizer:/build/build.zip path/to/be/copied/to
 ```
 
-8. Let the container terminate or press <kbd>ctrl</kbd>+<kbd>c</kbd> to kill it.
+7. Let the container terminate or press <kbd>ctrl</kbd>+<kbd>c</kbd> to kill it.
