@@ -72,6 +72,8 @@ to resize S3 images using Node.js on the fly.
     - Under `Environment variables` section, click `Edit`.
     - Click `Add environment variable`.
     - For `Key` type `BUCKET` and for `Value` paste in `YOUR_S3_BUCKET_NAME`.
+    - (Optional) If you would like to restrict resizing images to predefined dimensions, click `Add environment variable`.
+        - For `Key` type `WHITELISTED_DIMENSIONS` and for `Value` type your predefined dimensions separated by a space, for example `320x280 640x480 1200x800`. 
     - Click `Save`.
 
 4. Setup API Gateway
