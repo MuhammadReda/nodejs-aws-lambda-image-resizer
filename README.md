@@ -81,17 +81,27 @@ to resize S3 images using Node.js on the fly.
 4. Setup API Gateway
     - Go to [API-Gateway APIs](https://console.aws.amazon.com/apigateway/main/apis).
     - Under `Choose an API type` spot `HTTP API` block and click on `Build`.
-    - Under `Create and configure integrations` choose `Lambda`, then select `AWS Region` and `Lambda function` for your newly created function.
-    - Type a name for your API.
-    - Click on `Next`.
-    - For `Method` select `GET`.
-    - For `Resource path` type `{proxy+}` (notice the curly brackets and the plus sign).
-    - Keep `Integration target` as is.
-    - Click `Next`.
-    - For `Stage name` type `production`.
-    - Click `Next`.
-    - Click `Create`.
-
+    - Type your API name under `API name`.
+    - Click on `Review and Create`. (don't worry, you will come back later)
+    - Click on `Create`.
+    - From the menu on the left, under `Develop`, click on `Routes`.
+    - Click on `Create` button.
+    - For Method choose `GET` and for Route Path `/{proxy+}`.
+    - Click on `Create`.
+    - Now you should see the route you created under Routes Block. Click on the Method you just created `GET`.
+    - `Route details` should show, click on `Attach integration`.
+    - Click on `Create and attach integration`.
+    - Under `Integration target`, `Integration type` select `Lambda function`.
+    - Under `Integration details`, `Integration target` select your Lambda function region under `AWS Region` and your Lambda function under `Lambda function`.
+    - Click on `Create`.
+    - From the menu on the left, under `Deploy`, click on `Stages`.
+    - Click on `Create`.
+    - Under `Stage details`, enter a stage name. For example `production`.
+    - Click on `Create`.
+    - Click on `Deploy` button on the top right.
+    - Select the stage you just created from under `Select a stage`.
+    - Click on `Deploy to stage`.
+    - API URL should now appear under `Invoke URL`. Copy it as that's the URL to be used to resize images.
 
 ### Build Your Own AWS Lambda Image Reiszer
 Because requirements always differ and there's no one magic size fits all,
