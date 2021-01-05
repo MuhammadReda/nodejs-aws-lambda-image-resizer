@@ -3,22 +3,24 @@
 An [AWS Lambda Function](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)
 to resize S3 images using Node.js on the fly.
 
+### How Do Images Get Resized?
+1. User requests an image from the API Gateway.
+2. API Gateway triggers the Lambda Function.
+3. Lambda function runs basic validations on user input.
+4. The function checks if a resized image exists on S3 Bucket.
+5. If a resized image exists, image returned as a response to the API Gateway.
+6. If no resized image found, a new resized option is created on the fly and saved to S3 Bucket.
+7. Resized image is returned as a response to the API Gateway.
+
 #### AWS Services Used
 - [AWS Lambda](https://aws.amazon.com/lambda/)
 - [Amazon API Gateway](https://aws.amazon.com/api-gateway/)
 - [Amazon S3](https://aws.amazon.com/api-gateway/)
 - [AWS IAM](https://aws.amazon.com/iam/)
 
-
-### How Do Images Get Resized?
-1. User requests an image from the API Gateway.
-2. API Gateway triggers the Lambda Function.
-3. The function runs basic validations on user input.
-4. Then, the function checks if a resized image exists on S3 Bucket.
-5. If a resized image exists, image returned as a response to the API Gateway.
-6. If no resized image found, a new resized option is created on the fly and saved to S3 Bucket.
-7. Resized image is returned as a response to the API Gateway.
-
+### Prerequisites
+- AWS Console root access.
+- OR, AWS Console full access to the four [AWS Services above](#aws-services-used).
 
 ### Setup
 1. Setup S3 Bucket.
@@ -55,7 +57,7 @@ to resize S3 images using Node.js on the fly.
     - Don't forget to replace `YOUR_S3_BUCKET_NAME` with your created S3 Bucket Name.
     - Click on `Review ploicy`.
     - Set a name for the new ploicy and click `Create policy`.
-    - Back to `Create role`, hit the refresh button, search for and select the policy you just created.
+    - Go back to Create IAM Role page, hit the refresh button, search for and select the policy you just created.
     - Click on `Next: Tags`.
     - Click on `Next: Review`.
     - Enter a name for the new role and click `Create role`.
