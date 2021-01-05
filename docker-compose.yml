@@ -1,4 +1,5 @@
 version: "3"
 services:
-  aws-lambda-image-processor:
+  aws-lambda-image-resizer:
     build: .
+    container_name: 'aws-lambda-image-resizer'
