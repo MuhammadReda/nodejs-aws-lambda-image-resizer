@@ -1,7 +1,7 @@
 'use strict';
 
 const AWS = require('aws-sdk');
-const SHARP = require('sharp');
+const Sharp = require('sharp');
 
 const S3 = new AWS.S3({ signatureVersion: 'v4' });
 
@@ -59,10 +59,10 @@ exports.handler = async (event) => {
     }
 
     // validate requested image dimension against whitelisted dimensions.
-    if (WHITELISTED_DIMENSIONS && !WHITELISTED_DIMENSIONS.includes(resizeOption)) {
+    if (WHITELISTED_DIMENSIONS && !WHITELISTED_DIMENSIONS.includes(sizeAndAction[0])) {
         return {
             statusCode: 400,
-            body: `WHITELIST is set but does not contain the size parameter "${resizeOption}"`,
+            body: `WHITELIST is set but does not contain the size parameter "${sizeAndAction[0]}"`,
             headers: { 'Content-Type': 'text/plain' }
         };
     }
