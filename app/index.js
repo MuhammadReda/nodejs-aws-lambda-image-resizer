@@ -1,14 +1,14 @@
 'use strict';
 
 const AWS = require('aws-sdk');
-const Sharp = require('sharp');
+const SHARP = require('sharp');
 
 const S3 = new AWS.S3({ signatureVersion: 'v4' });
 
 // environment variables
 const BUCKET = process.env.BUCKET;
-const WHITELIST = process.env.WHITELIST
-    ? Object.freeze(process.env.WHITELIST.split(' '))
+const WHITELISTED_DIMENSIONS = process.env.WHITELISTED_DIMENSIONS
+    ? Object.freeze(process.env.WHITELISTED_DIMENSIONS.split(' '))
     : null;
 
 const DEFAULT_CACHE_HEADER = 'public, max-age=86400';
@@ -58,8 +58,8 @@ exports.handler = async (event) => {
         };
     }
 
-    // Whitelist validation.
-    if (WHITELIST && !WHITELIST.includes(resizeOption)) {
+    // validate requested image dimension against whitelisted dimensions.
+    if (WHITELISTED_DIMENSIONS && !WHITELISTED_DIMENSIONS.includes(resizeOption)) {
         return {
             statusCode: 400,
             body: `WHITELIST is set but does not contain the size parameter "${resizeOption}"`,
