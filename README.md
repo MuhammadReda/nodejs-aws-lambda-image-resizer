@@ -61,6 +61,11 @@ to resize S3 images using Node.js on the fly.
     - Click on `Next: Tags`.
     - Click on `Next: Review`.
     - Enter a name for the new role and click `Create role`.
+    - (Optional) if you would like to log API Gateway calls to [Amazon Cloudwatch](https://us-east-2.console.aws.amazon.com/cloudwatch/home)
+        - Click to edit the role you just created.
+        - Click on `Attach policies`.
+        - Type and select `AmazonAPIGatewayPushToCloudWatchLogs` from the Filter policies search box.
+        - Click `Attach policy`.
 
 3. Setup Lambda Function
     - Go to [Lambda Home](https://us-east-2.console.aws.amazon.com/lambda/home).
