@@ -75,7 +75,7 @@ to resize S3 images using Node.js on the fly.
     - Under permissions, choose `Use an existing role`, then from roles list select the role you just created.
     - Click on `Create function`.
     - Under `Function code` section, click to expand `Actions` dropdown the click `Upload a .zip file`.
-    - Upload build file [FILE BUILD](https://mreda.net);
+    - Upload build file [FILE BUILD](#)
     - Under `Environment variables` section, click `Edit`.
     - Click `Add environment variable`.
     - For `Key` type `BUCKET` and for `Value` paste in `YOUR_S3_BUCKET_NAME`.
@@ -155,14 +155,16 @@ docker-compose build
 docker-compose up --build
 ```
 
-5. Note that after the build is complete the container sleeps for 10 minutes for you to copy the build.
+5. Note that after the build is complete the container sleeps for 10 minutes for you to copy the build from inside the container to your machine.
 
-6. Find the Container ID for our Image and run to copy the build from inside the container to your host
+6. Copy the build.
 ```bash
 docker cp aws-lambda-image-resizer:/build/build.zip path/to/be/copied/to
 ```
 
 7. Let the container terminate or press <kbd>ctrl</kbd>+<kbd>c</kbd> to kill it.
+
+8. Upload .zip build file to your AWS Lambda function. 
 
 #### Issues and feature requests
 [Here](https://github.com/MuhammadReda/nodejs-aws-lambda-image-resizer/issues)
