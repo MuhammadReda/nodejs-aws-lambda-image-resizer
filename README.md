@@ -111,12 +111,16 @@ to resize S3 images using Node.js on the fly.
 5. Finally, resize images using AWS Lambda!
     - Resized image URL structure:
     ```
+    # Resize using Width and Height.
+
     {api_gatewau_url}/{width}x{height}/{s3_object_path}
     # example: https://dh12oluo25.execute-api.us-east-1.amazonaws.com/production/180x120/image.png
     # example: https://dh12oluo25.execute-api.us-east-1.amazonaws.com/production/640x480/path/to/image.jpeg
     ```
     OR
     ```
+    # Resize using Width, Height and Fit.
+
     {api_gatewau_url}/{width}x{height}_{fit}/{s3_object_path}
     # example: https://dh12oluo25.execute-api.us-east-1.amazonaws.com/production/180x120_fill/image.png
     # example: https://dh12oluo25.execute-api.us-east-1.amazonaws.com/production/640x480_inside/another/path/to/image.jpg
