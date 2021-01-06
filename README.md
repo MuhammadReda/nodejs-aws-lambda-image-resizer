@@ -164,11 +164,11 @@ docker cp aws-lambda-image-resizer:/build/build.zip path/to/be/copied/to
 
 7. Let the container terminate or press <kbd>ctrl</kbd>+<kbd>c</kbd> to kill it.
 
-#### Credits
-- SagidM's [s3-resizer](https://github.com/sagidM/s3-resizer).
-
 #### Issues and feature requests
 [Here](https://github.com/MuhammadReda/nodejs-aws-lambda-image-resizer/issues)
 
 #### License
-[MIT](http://opensource.org/licenses/MIT)
+[MIT](https://github.com/MuhammadReda/nodejs-aws-lambda-image-resizer/blob/master/LICENSE)
+
+#### Credits
+- SagidM's [s3-resizer](https://github.com/sagidM/s3-resizer).
