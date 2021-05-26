@@ -50,7 +50,7 @@ exports.handler = async (event) => {
     const action = sizeAndAction.length > 1 ? sizeAndAction[1] : 'cover';
 
     // validate requested filename extension.
-    if(!/\.(jpe?g|png|gif|svg|bmp)$/i.test(filename)) {
+    if(!/\.(jpe?g|png|gif|svg|bmp|jfif|tif|tiff|dib)$/i.test(filename)) {
         return {
             statusCode: 400,
             body: `Requested file must be an image. Invalid filename: ${filename}.`,
@@ -104,6 +104,20 @@ exports.handler = async (event) => {
             headers: {
                 'Content-Type': 'text/plain',
                 'Cache-Control': 'private, nocache'
+            }
+        };
+    }
+
+    // if format is not supported by Sharp
+    if(/\.(bmp|jfif|dib)$/i.test(filename)) {
+        return {
+            statusCode: 200,
+            body: (Buffer.from(originalImage.Body)).toString('base64'),
+            isBase64Encoded: true,
+            headers: {
+                'Content-Type': originalImage.contentType,
+                'Cache-Control': DEFAULT_CACHE_HEADER,
+                'Age': 0
             }
         };
     }
