@@ -75,7 +75,7 @@ to resize S3 images using Node.js on the fly.
     - Under permissions, choose `Use an existing role`, then from roles list select the role you just created.
     - Click on `Create function`.
     - Under `Function code` section, click to expand `Actions` dropdown the click `Upload a .zip file`.
-    - Download the [Build file](https://github.com/MuhammadReda/nodejs-aws-lambda-image-resizer/releases/download/v1.4.26/build-1.4.26.zip) and upload it as your Lambda function source code. 
+    - Download the [Build file](https://github.com/MuhammadReda/nodejs-aws-lambda-image-resizer/releases/download/v1.5.37/build-1.5.37.zip) and upload it as your Lambda function source code. 
     - Under `Environment variables` section, click `Edit`.
     - Click `Add environment variable`.
     - For `Key` type `BUCKET` and for `Value` paste in `YOUR_S3_BUCKET_NAME`.
