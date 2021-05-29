@@ -49,14 +49,18 @@ exports.handler = async (event) => {
     const sizes = sizeAndAction[0].split('x');
     const action = sizeAndAction.length > 1 ? sizeAndAction[1] : 'cover';
 
-    // validate requested filename extension.
-    if(!/\.(jpe?g|png|gif|svg|bmp|jfif|tif|tiff|dib)$/i.test(filename)) {
-        return {
-            statusCode: 400,
-            body: `Requested file must be an image. Invalid filename: ${filename}.`,
-            headers: { 'Content-Type': 'text/plain' }
-        };
-    }
+    const allowedMimeTypes = [
+        'image/jpeg',
+        'image/gif',
+        'image/png',
+        'image/svg+xml',
+        'image/tiff',
+        'image/bmp'
+    ];
+
+    const unsupportedSharpMimeTypes = [
+        'image/bmp'
+    ];
 
     // validate requested image dimension against whitelisted dimensions.
     if (WHITELISTED_DIMENSIONS && !WHITELISTED_DIMENSIONS.includes(sizeAndAction[0])) {
@@ -86,7 +90,7 @@ exports.handler = async (event) => {
             body: (Buffer.from(existingResized.Body)).toString('base64'),
             isBase64Encoded: true,
             headers: {
-                'Content-Type': existingResized.contentType,
+                'Content-Type': existingResized.ContentType,
                 'Cache-Control': DEFAULT_CACHE_HEADER
             }
         };
@@ -108,14 +112,27 @@ exports.handler = async (event) => {
         };
     }
 
-    // if format is not supported by Sharp
-    if(/\.(bmp|jfif|dib)$/i.test(filename)) {
+    const originalImageMime = originalImage.ContentType;
+    if(!allowedMimeTypes.includes(originalImageMime)) {
+        // return 400.
+        return {
+            statusCode: 400,
+            body: `Unsupported MIME type: ${originalImageMime}. Supported types: ${allowedMimeTypes.join(', ')}`,
+            headers: {
+                'Content-Type': 'text/plain',
+                'Cache-Control': 'private, nocache'
+            }
+        };
+    }
+
+    // handle unsupported Sharp images
+    if(unsupportedSharpMimeTypes.includes(originalImageMime)) {
         return {
             statusCode: 200,
             body: (Buffer.from(originalImage.Body)).toString('base64'),
             isBase64Encoded: true,
             headers: {
-                'Content-Type': originalImage.contentType,
+                'Content-Type': originalImageMime,
                 'Cache-Control': DEFAULT_CACHE_HEADER,
                 'Age': 0
             }
@@ -136,19 +153,19 @@ exports.handler = async (event) => {
     await S3.putObject({
         Body: result,
         Bucket: BUCKET,
-        ContentType: originalImage.ContentType,
+        ContentType: originalImageMime,
         Key: path,
         CacheControl: DEFAULT_CACHE_HEADER
     }).promise();
 
 
-    // return created image as a repsonse.
+    // return created image as a response.
     return {
         statusCode: 200,
         body: result.toString('base64'),
         isBase64Encoded: true,
         headers: {
-            'Content-Type': originalImage.contentType,
+            'Content-Type': originalImageMime,
             'Cache-Control': DEFAULT_CACHE_HEADER,
             'Age': 0
         }
