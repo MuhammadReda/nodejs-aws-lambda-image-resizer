@@ -55,6 +55,8 @@ to resize S3 images using Node.js on the fly.
     }
     ```
     - Don't forget to replace `YOUR_S3_BUCKET_NAME` with your created S3 Bucket Name.
+    - Click on `Next: Tags`.
+    - Click on `Next: Review`.
     - Click on `Review ploicy`.
     - Set a name for the new ploicy and click `Create policy`.
     - Go back to Create IAM Role page, hit the refresh button, search for and select the policy you just created.
