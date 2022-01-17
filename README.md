@@ -24,7 +24,7 @@ to resize S3 images using Node.js on the fly.
 
 ### Setup
 1. Setup S3 Bucket.
-    - Open AWS Console and go to [S3 Home](https://eu-central-1.console.aws.amazon.com/apigateway/home).
+    - Open AWS Console and go to [S3 Home](https://s3.console.aws.amazon.com/s3/home).
     - Click on `Create bucket` button.
     - Choose a name and a region for your new bucket.
     - Keep a note of the bucket name, we will need it later.
