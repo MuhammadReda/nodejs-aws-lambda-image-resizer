@@ -2,7 +2,8 @@
 
 An [AWS Lambda Function](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)
 to resize S3 images using Node.js on the fly.
-A detailed, screenshoted, step-by-step guide can be found [here](https://dynamic-aws-lambda-image-resizer-nodejs.mreda.net/).
+
+A detailed, screenshot-ed, step-by-step guide can be found [here](https://dynamic-aws-lambda-image-resizer-nodejs.mreda.net/).
 
 ### How Do Images Get Resized?
 1. User requests an image from the API Gateway.
