@@ -19,6 +19,7 @@ A detailed, screenshot-ed, step-by-step guide can be found [here](https://dynami
 - [Amazon API Gateway](https://aws.amazon.com/api-gateway/)
 - [Amazon S3](https://aws.amazon.com/api-gateway/)
 - [AWS IAM](https://aws.amazon.com/iam/)
+- (Optional) [Amazon Cloud Watch](https://us-east-2.console.aws.amazon.com/cloudwatch/home)
 
 ### Prerequisites
 - AWS Console root access.
