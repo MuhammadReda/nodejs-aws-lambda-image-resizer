@@ -1,4 +1,4 @@
-# AWS Lambda Image Resizer using Node.js
+# [AWS Lambda Image Resizer using Node.js](https://dynamic-aws-lambda-image-resizer-nodejs.mreda.net/)
 
 An [AWS Lambda Function](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)
 to resize S3 images using Node.js on the fly.
