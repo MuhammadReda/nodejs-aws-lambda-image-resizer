@@ -10,8 +10,8 @@ A detailed, screenshot-ed, step-by-step guide can be found [here](https://dynami
 2. API Gateway triggers the Lambda Function.
 3. Lambda function runs basic validations on user input.
 4. The function checks if a resized image exists on S3 Bucket.
-5. If a resized image exists, image returned as a response to the API Gateway.
-6. If no resized image found, a new resized option is created on the fly and saved to S3 Bucket.
+5. If a resized image exists, image is returned as a response to the API Gateway.
+6. If no resized image found, a new resized version is created on the fly and saved to S3 Bucket.
 7. Resized image is returned as a response to the API Gateway.
 
 #### AWS Services Used
@@ -31,7 +31,6 @@ A detailed, screenshot-ed, step-by-step guide can be found [here](https://dynami
     - Click on `Create bucket` button.
     - Choose a name and a region for your new bucket.
     - Keep a note of the bucket name, we will need it later.
-    - Uncheck `Block all public access` option.
     - Click on `Create bucket`.
 
 2. Setup IAM Role.
@@ -60,8 +59,8 @@ A detailed, screenshot-ed, step-by-step guide can be found [here](https://dynami
     - Don't forget to replace `YOUR_S3_BUCKET_NAME` with your created S3 Bucket Name.
     - Click on `Next: Tags`.
     - Click on `Next: Review`.
-    - Click on `Review ploicy`.
-    - Set a name for the new ploicy and click `Create policy`.
+    - Click on `Review policy`.
+    - Set a name for the new policy and click `Create policy`.
     - Go back to Create IAM Role page, hit the refresh button, search for and select the policy you just created.
     - Click on `Next: Tags`.
     - Click on `Next: Review`.
@@ -76,7 +75,7 @@ A detailed, screenshot-ed, step-by-step guide can be found [here](https://dynami
     - Go to [Lambda Home](https://us-east-2.console.aws.amazon.com/lambda/home).
     - Click on `Create function`.
     - Under `Choose one of the following options to create your function` choose `Author from scratch`.
-    - For Runtime, choose `Node.js 12.x`.
+    - For Runtime, choose `Node.js 18.x`.
     - Under permissions, choose `Use an existing role`, then from roles list select the role you just created.
     - Click on `Create function`.
     - Under `Function code` section, click to expand `Actions` dropdown the click `Upload a .zip file`.
@@ -138,40 +137,30 @@ A detailed, screenshot-ed, step-by-step guide can be found [here](https://dynami
         - `{s3_object_path}`: Path to image inside S3 Bucket. 
 
 
-## Build Your Own AWS Lambda Image Reiszer
+## Build Your Own AWS Lambda Image Resizer
 Because requirements always differ and there's no one magic size fits all,
 this simple resizer is designed so you can modify the original script to match your requirements
 and then rebuild it in order to be published to your own AWS Lambda Function.
 
-This resizer is making use of [Sharp](https://sharp.pixelplumbing.com/) to resize image,
-and due to Sharp's OS dependencies, you cannot just run `npm install` on your local environment
-then package and deploy the code to AWS Lambda, unless you are using
-[Amazon Linux](https://aws.amazon.com/amazon-linux-ami/).
+This resizer is making use of [Sharp](https://sharp.pixelplumbing.com/) to resize images. A build script is included in 
+the package.json file which makes sure that the Sharp linux binaries are added to package.
 
-That's why the resizer comes packed with Docker, so you can build and deploy to AWS Lambda whenever needed following the below steps:
+Run the build script after making your changes to index.js, you will find a new zip file in /app/dist when in runs successfully.
+```bash
+npm run build
+```
+
+A docker file is included for testing purposes. See the [amazon documentation](https://hub.docker.com/r/amazon/aws-lambda-nodejs) on how to test your function.
 
 1. Download and install [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/).
 
-2. Make needed changes inside `./app` folder.
 
-3. Run (first time only)
+2. After making a change to the string, rerun the docker compose command.
 ```bash
-docker-compose build
+docker compose up --build
 ```
 
-4. Everytime you want to build your version of the app, run
-```bash
-docker-compose up --build
-```
-
-5. Note that after the build is complete the container sleeps for 10 minutes for you to copy the build from inside the container to your machine.
-
-6. Copy the build.
-```bash
-docker cp aws-lambda-image-resizer:/build/build.zip path/to/be/copied/to
-```
-
-7. Let the container terminate or press <kbd>ctrl</kbd>+<kbd>c</kbd> to kill it.
+7. Press <kbd>ctrl</kbd>+<kbd>c</kbd> to kill the running container.
 
 8. Upload .zip build file to your AWS Lambda function.
 

@@ -7,6 +7,12 @@
         "name": "Muhammad Reda",
         "email": "say.hello@mreda.net"
     },
+    "scripts": {
+        "build:init": "rm -rf package-lock.json && rm -rf dist && rm -rf node_modules",
+        "build:zip": "zip -rq image-resizer.zip .",
+        "build:dist": "mkdir dist && mv image-resizer.zip dist/",
+        "build": "npm run build:init && npm install --arch=x64 --platform=linux --libc=glibc sharp --production && npm run build:zip && npm run build:dist"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/MuhammadReda/aws-lambda-image-processor.git"
@@ -16,9 +22,7 @@
         "url": "https://github.com/MuhammadReda/aws-lambda-image-processor/issues"
     },
     "dependencies": {
-        "sharp": "^0.30.7"
-    },
-    "devDependencies": {
-        "aws-sdk": "^2.36.0"
+        "aws-sdk": "^2.36.0",
+        "sharp": "^0.31.3"
     }
 }
