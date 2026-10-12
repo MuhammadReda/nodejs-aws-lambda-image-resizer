@@ -1,9 +1,7 @@
-'use strict';
+import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import Sharp from 'sharp';
 
-const AWS = require('aws-sdk');
-const Sharp = require('sharp');
-
-const S3 = new AWS.S3({ signatureVersion: 'v4' });
+const S3 = new S3Client({});
 
 // environment variables
 const BUCKET = process.env.BUCKET;
@@ -16,30 +14,21 @@ const FIT_OPTIONS = [
     'cover',    // Preserving aspect ratio, ensure the image covers both provided dimensions by cropping/clipping to fit. (default)
     'contain',  // Preserving aspect ratio, contain within both provided dimensions using "letterboxing" where necessary.
     'fill',     // Ignore the aspect ratio of the input and stretch to both provided dimensions.
-    'inside',   // Preserving aspect ratio, resize the image to be as large as possible while ensuring its dimensions are less than or equal to both those specified.
+    'inside',   // Preserving aspect ratio, resize the image to be as large as possible whileimage ensuring its dimensions are less than or equal to both those specified.
     'outside',  // Preserving aspect ratio, resize the image to be as small as possible while ensuring its dimensions are greater than or equal to both those specified.
 ];
 
-function getResource(resourcePath) {
-
-    let params = {
-        Bucket: BUCKET,
-        Key: resourcePath
-    };
-
-    return new Promise((resolve, reject) => {
-        S3.getObject(params, (err, data) => {
-            if(err) {
-                return resolve(false);
-            }
-            if(data) {
-                return resolve(data);
-            }
-        })
-    });
+async function getResource(resourcePath) {
+    try {
+        const data = await S3.send(new GetObjectCommand({ Bucket: BUCKET, Key: resourcePath }));
+        // SDK v3 returns a stream; read it into a Buffer so the rest of the code can use it as before.
+        return { ...data, Body: Buffer.from(await data.Body.transformToByteArray()) };
+    } catch (err) {
+        return false;
+    }
 }
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
     const pathParameters = event.pathParameters;
     const path = pathParameters.proxy || pathParameters[Object.keys(pathParameters)[0]];
     let parts = path.split('/');
@@ -150,13 +139,13 @@ exports.handler = async (event) => {
         .toBuffer();
 
     // save newly created image to S3.
-    await S3.putObject({
+    await S3.send(new PutObjectCommand({
         Body: result,
         Bucket: BUCKET,
         ContentType: originalImageMime,
         Key: path,
         CacheControl: DEFAULT_CACHE_HEADER
-    }).promise();
+    }));
 
 
     // return created image as a response.
