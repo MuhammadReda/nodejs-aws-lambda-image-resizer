@@ -1,24 +1,27 @@
 {
-    "name": "aws-lambda-image-processor",
-    "version": "4.0.1",
+    "name": "nodejs-aws-lambda-image-resizer",
+    "version": "5.0.0",
     "description": "Resize images on the fly using AWS Lambda.",
+    "type": "module",
     "main": "index.js",
+    "engines": {
+        "node": ">=20"
+    },
     "author": {
         "name": "Muhammad Reda",
         "email": "say.hello@mreda.net"
     },
+    "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/MuhammadReda/aws-lambda-image-processor.git"
+        "url": "git+https://github.com/MuhammadReda/nodejs-aws-lambda-image-resizer.git"
     },
-    "homepage": "https://github.com/MuhammadReda/aws-lambda-image-processor#readme",
+    "homepage": "https://github.com/MuhammadReda/nodejs-aws-lambda-image-resizer#readme",
     "bugs": {
-        "url": "https://github.com/MuhammadReda/aws-lambda-image-processor/issues"
+        "url": "https://github.com/MuhammadReda/nodejs-aws-lambda-image-resizer/issues"
     },
     "dependencies": {
-        "sharp": "^0.30.7"
-    },
-    "devDependencies": {
-        "aws-sdk": "^2.36.0"
+        "@aws-sdk/client-s3": "^3.1146.0",
+        "sharp": "^0.35.5"
     }
 }
