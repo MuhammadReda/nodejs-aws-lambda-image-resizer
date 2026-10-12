@@ -76,11 +76,11 @@ A detailed, screenshot-ed, step-by-step guide can be found [here](https://dynami
     - Go to [Lambda Home](https://us-east-2.console.aws.amazon.com/lambda/home).
     - Click on `Create function`.
     - Under `Choose one of the following options to create your function` choose `Author from scratch`.
-    - For Runtime, choose `Node.js 12.x`.
+    - For Runtime, choose `Node.js 22.x`.
     - Under permissions, choose `Use an existing role`, then from roles list select the role you just created.
     - Click on `Create function`.
     - Under `Function code` section, click to expand `Actions` dropdown the click `Upload a .zip file`.
-    - Download the [Build file](https://github.com/MuhammadReda/nodejs-aws-lambda-image-resizer/releases/download/v1.5.40/build-v1.5.40.zip) and upload it as your Lambda function source code. 
+    - Download the build file from the [latest release](https://github.com/MuhammadReda/nodejs-aws-lambda-image-resizer/releases/latest) (v5.0.0 or newer; older builds do not run on Node.js 22) and upload it as your Lambda function source code. 
     - Under `Environment variables` section, click `Edit`.
     - Click `Add environment variable`.
     - For `Key` type `BUCKET` and for `Value` paste in `YOUR_S3_BUCKET_NAME`.
