@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends zip && rm -rf /
 RUN mkdir /app /build
 
 # copy source code
-COPY ./app/* /app/
+COPY ./app/ /app/
 
 # install production dependencies with Sharp binaries for Lambda (Linux x64, glibc)
 WORKDIR /app
