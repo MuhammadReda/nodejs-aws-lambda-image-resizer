@@ -81,6 +81,7 @@ A detailed, screenshot-ed, step-by-step guide can be found [here](https://dynami
     - Click on `Create function`.
     - Under `Function code` section, click to expand `Actions` dropdown the click `Upload a .zip file`.
     - Download the build file from the [latest release](https://github.com/MuhammadReda/nodejs-aws-lambda-image-resizer/releases/latest) (v5.0.0 or newer; older builds do not run on Node.js 22) and upload it as your Lambda function source code. 
+    - Under `Runtime settings`, click `Edit`, set `Handler` to `src/index.handler` and click `Save`.
     - Under `Environment variables` section, click `Edit`.
     - Click `Add environment variable`.
     - For `Key` type `BUCKET` and for `Value` paste in `YOUR_S3_BUCKET_NAME`.
@@ -152,7 +153,7 @@ That's why the resizer comes packed with Docker, so you can build and deploy to 
 
 1. Download and install [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/).
 
-2. Make needed changes inside `./app` folder.
+2. Make needed changes inside `./app/src` folder.
 
 3. Run (first time only)
 ```bash
