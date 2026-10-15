@@ -27,6 +27,17 @@ test('serves an existing resized image without reading the original', async () =
 test('404 when the original is missing', async () => {
     const res = await createHandler({ s3: fakeS3(), config })(event('100x100/nope.png'));
     assert.equal(res.statusCode, 404);
+    assert.equal(res.headers['Cache-Control'], 'no-store');
+});
+
+test('S3 errors other than not-found are 500s, not 404s', async () => {
+    const res = await createHandler({ s3: fakeS3(), config: { ...config, bucket: 'denied' } })(event('100x100/cat.png'));
+    assert.equal(res.statusCode, 500);
+});
+
+test('missing path is a 400, not a crash', async () => {
+    const res = await createHandler({ s3: fakeS3(), config })({ pathParameters: {} });
+    assert.equal(res.statusCode, 400);
 });
 
 test('400 for invalid requests, before any S3 call', async () => {

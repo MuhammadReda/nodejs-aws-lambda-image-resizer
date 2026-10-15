@@ -1,7 +1,7 @@
 import sharp from 'sharp';
 import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 
-/** In-memory stand-in for S3Client. Objects are keyed "bucket/key". */
+/** In-memory stand-in for S3Client. Objects are keyed "bucket/key"; bucket "denied" always fails. */
 export function fakeS3(seed = {}) {
     const store = new Map(Object.entries(seed));
     const calls = [];
@@ -12,6 +12,7 @@ export function fakeS3(seed = {}) {
             const { Bucket, Key } = cmd.input;
             calls.push(`${cmd.constructor.name}:${Bucket}/${Key}`);
             if (cmd instanceof GetObjectCommand) {
+                if (Bucket === 'denied') throw Object.assign(new Error('Access Denied'), { name: 'AccessDenied' });
                 const obj = store.get(`${Bucket}/${Key}`);
                 if (!obj) throw Object.assign(new Error('The specified key does not exist.'), { name: 'NoSuchKey' });
                 return {
