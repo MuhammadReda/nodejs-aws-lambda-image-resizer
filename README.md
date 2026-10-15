@@ -53,11 +53,17 @@ A detailed, screenshot-ed, step-by-step guide can be found [here](https://dynami
                     "s3:GetObject",
                     "s3:PutObject"
                 ]
+            },
+            {
+                "Effect": "Allow",
+                "Resource": "arn:aws:s3:::YOUR_S3_BUCKET_NAME",
+                "Action": "s3:ListBucket"
             }
         ]
     }
     ```
-    - Don't forget to replace `YOUR_S3_BUCKET_NAME` with your created S3 Bucket Name.
+    - Don't forget to replace `YOUR_S3_BUCKET_NAME` with your created S3 Bucket Name (in both places).
+    - `s3:ListBucket` lets S3 report missing images as "not found" (404) instead of "access denied".
     - Click on `Next: Tags`.
     - Click on `Next: Review`.
     - Click on `Review ploicy`.
