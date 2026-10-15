@@ -17,6 +17,10 @@ export class RequestError extends Error {
  * Parses "640x480_inside/path/to/image.jpg" into a resize request.
  */
 export function parseRequest(path, config) {
+    if (typeof path !== 'string' || path === '') {
+        throw new RequestError(400, 'Missing path. Expected /{width}x{height}/{key}');
+    }
+
     const parts = path.split('/');
     const resizeOption = parts.shift();
     const [size, fit = 'cover'] = resizeOption.split('_');
