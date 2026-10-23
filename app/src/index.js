@@ -33,16 +33,21 @@ export function createHandler({ s3, config }) {
     }
 
     /**
-     * Returns the object, or null if it doesn't exist. Any other S3 error
+     * Returns null if the object doesn't exist, { tooLarge: true } if it is bigger than
+     * maxBytes (without downloading it), or { body, contentType }. Any other S3 error
      * (access denied, throttling, ...) is thrown instead of being reported as a 404.
      */
-    async function getObject(key) {
+    async function getObject(key, maxBytes) {
         let data;
         try {
             data = await s3.send(new GetObjectCommand({ Bucket: config.bucket, Key: key }));
         } catch (err) {
             if (isNotFound(err)) return null;
             throw err;
+        }
+        if (maxBytes && data.ContentLength > maxBytes) {
+            data.Body?.destroy?.();
+            return { tooLarge: true };
         }
         // SDK v3 returns a stream; read it into a Buffer.
         return { body: Buffer.from(await data.Body.transformToByteArray()), contentType: data.ContentType };
@@ -58,8 +63,9 @@ export function createHandler({ s3, config }) {
             const existing = await getObject(request.cacheKey);
             if (existing) return imageResponse(existing.body, existing.contentType);
 
-            const original = await getObject(request.key);
+            const original = await getObject(request.key, config.maxSourceBytes);
             if (!original) return textResponse(404, `Image not found: ${request.key}`);
+            if (original.tooLarge) return textResponse(413, `Source image exceeds ${config.maxSourceBytes} bytes.`);
 
             const mime = original.contentType;
             if (!ALLOWED_MIME_TYPES.includes(mime)) {
