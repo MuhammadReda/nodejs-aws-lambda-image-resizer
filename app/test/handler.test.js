@@ -5,7 +5,7 @@ import { createHandler } from '../src/index.js';
 import { loadConfig } from '../src/config.js';
 import { fakeS3, event, png } from './helpers.js';
 
-const config = loadConfig({ BUCKET: 'b' });
+const config = loadConfig({ BUCKET: 'b', ALLOWED_DIMENSIONS: '*', MAX_SOURCE_BYTES: '5000000' });
 
 test('generates, caches and returns a resized image', async () => {
     const s3 = fakeS3({ 'b/a/cat.png': { body: await png(800, 600), type: 'image/png' } });
@@ -42,7 +42,7 @@ test('missing path is a 400, not a crash', async () => {
 
 test('400 for invalid requests, before any S3 call', async () => {
     const s3 = fakeS3();
-    const res = await createHandler({ s3, config })(event('100x100_wat/cat.png'));
+    const res = await createHandler({ s3, config })(event('abcx1/cat.png'));
     assert.equal(res.statusCode, 400);
     assert.equal(s3.calls.length, 0);
 });
@@ -51,4 +51,10 @@ test('400 for unsupported MIME types', async () => {
     const s3 = fakeS3({ 'b/doc.pdf': { body: Buffer.from('%PDF'), type: 'application/pdf' } });
     const res = await createHandler({ s3, config })(event('100x100/doc.pdf'));
     assert.equal(res.statusCode, 400);
+});
+
+test('413 for oversized originals, without downloading them', async () => {
+    const s3 = fakeS3({ 'b/big.png': { body: Buffer.alloc(5000001), type: 'image/png' } });
+    const res = await createHandler({ s3, config })(event('100x100/big.png'));
+    assert.equal(res.statusCode, 413);
 });
