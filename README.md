@@ -91,8 +91,9 @@ A detailed, screenshot-ed, step-by-step guide can be found [here](https://dynami
     - Under `Environment variables` section, click `Edit`.
     - Click `Add environment variable`.
     - For `Key` type `BUCKET` and for `Value` paste in `YOUR_S3_BUCKET_NAME`.
-    - (Optional) If you would like to restrict resizing images to predefined dimensions, click `Add environment variable`.
-        - For `Key` type `WHITELISTED_DIMENSIONS` and for `Value` type your predefined dimensions separated by a space, for example `320x280 640x480 1200x800`. 
+    - (Optional) Only these sizes can be requested by default: `320x240 640x480 1280x960`. To change them, click `Add environment variable`.
+        - For `Key` type `ALLOWED_DIMENSIONS` and for `Value` type your sizes separated by a space, for example `320x280 640x480 autox600`. Use `*` to allow any size up to `MAX_DIMENSION` (not recommended: every new size costs compute and storage).
+    - (Optional) Other settings: `MAX_DIMENSION` (largest width or height, default `4000`), `MAX_SOURCE_BYTES` (largest original image, default 25 MB) and `CACHE_CONTROL` (default `public, max-age=86400`).
     - Click `Save`.
 
 4. Setup API Gateway
