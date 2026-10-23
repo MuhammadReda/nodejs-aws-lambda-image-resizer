@@ -1,6 +1,6 @@
 {
     "name": "nodejs-aws-lambda-image-resizer",
-    "version": "5.0.3",
+    "version": "5.0.4",
     "description": "Resize images on the fly using AWS Lambda.",
     "type": "module",
     "main": "src/index.js",
